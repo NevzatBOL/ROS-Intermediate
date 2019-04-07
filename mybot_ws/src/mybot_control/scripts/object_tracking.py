@@ -11,21 +11,21 @@ from geometry_msgs.msg import Twist
 class objectTracking():
     def __init__(self):
         rospy.init_node('objectTracking', anonymous=False)
+        rospy.Subscriber('/mybot/camera1/image_raw',Image ,self.callback)
+
         rospy.loginfo("To stop Mytbot CTRL + C")
         rospy.on_shutdown(self.shutdown)
-        
+
         self.redLower = np.array([0, 100, 100])
         self.redUpper = np.array([10, 255, 255])
 
         self.cmd_vel_pub= rospy.Publisher('cmd_vel', Twist, queue_size=1)
-        self.move_cmd = Twist() #move_cmd objesini olusrutduk.
-
-        rospy.Subscriber('/mybot/camera1/image_raw',Image ,self.callback)
+        self.move_cmd = Twist() #move_cmd objesini olusturduk.
 
     def callback(self, image_msg):
         bridge = CvBridge()
         image_cv = bridge.imgmsg_to_cv2(image_msg)
-        self.frame = hsv=cv2.cvtColor(image_cv,cv2.COLOR_RGB2BGR)
+        self.frame = cv2.cvtColor(image_cv,cv2.COLOR_RGB2BGR)
         self.renk_filtresi()
 
     def renk_filtresi(self):
@@ -67,10 +67,8 @@ class objectTracking():
         self.cmd_vel_pub.publish(self.move_cmd)
 
     def shutdown(self):
-        # stop mybot
         rospy.loginfo("Stop Mybot")
         self.cmd_vel_pub.publish(Twist())
-        rospy.sleep(1)
 
 if __name__ == '__main__':
     try:
