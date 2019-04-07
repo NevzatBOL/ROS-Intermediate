@@ -36,7 +36,7 @@ class GoToPose():
         self.move_base.send_goal(goal)
 
         #gorev tamamlanana kadar 60sn bekle ve gorevin sonucunu dondur.
-        success = self.move_base.wait_for_result(rospy.Duration(60)) 
+        success = self.move_base.wait_for_result(rospy.Duration(90)) 
 
         state = self.move_base.get_state()
         if success and state == GoalStatus.SUCCEEDED:
@@ -60,7 +60,7 @@ if __name__ == '__main__':
         navigator = GoToPose()
 
         # Gorev parametreleri
-        position = {'x': -2.87, 'y' : -4.36}
+        position = {'x': -1.64, 'y': -5.36} #Kullanılan haritaya gore koordinatlar guncellenmelidir.
         quaternion = {'r1' : 0.000, 'r2' : 0.000, 'r3' : 0.000, 'r4' : 1.000}
 
         rospy.loginfo("Go to (%s, %s) pose", position['x'], position['y'])
